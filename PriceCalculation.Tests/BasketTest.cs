@@ -46,6 +46,20 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(3.10m));
         }
+
+        [Test]
+        public void BreadOfferCanBeAppliedMultipleTimes()
+        {
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Bread);
+
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Bread);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(4.20m));
+        }
     }
 
     public class Basket
