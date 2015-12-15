@@ -71,12 +71,41 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(3.45m));
         }
+
+        [Test]
+        public void MilkOfferDoesNotApplyToExtraMilk()
+        {
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(4.60m));
+        }
+
+        [Test]
+        public void MilkOfferIsAppliedMultipleTimes()
+        {
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(6.90m));
+        }
     }
 
     public class Basket
     {
         private readonly ICollection<Product> products = new List<Product>();
         private static int noOfButterRequiredForOffer = 2;
+        private static int noOfMilkRequiredForOffer = 4;
 
         public void AddProduct(Product product)
         {
@@ -87,7 +116,18 @@ namespace PriceCalculation.Tests
         {
             var discount = GetBreadOfferDiscount();
 
+            discount += GetMilkOfferDiscount();
+
             return products.Sum(p => p.Price) - discount;
+        }
+
+        private decimal GetMilkOfferDiscount()
+        {
+            var noOfMilk = products.Count(p => p == Product.Milk);
+
+            var noOfTimesToApplyOffer = noOfMilk / noOfMilkRequiredForOffer;
+
+            return noOfTimesToApplyOffer * Product.Milk.Price;
         }
 
         private decimal GetBreadOfferDiscount()
