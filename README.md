@@ -1,5 +1,4 @@
-# price-calculation-exercise
-Price calculation exercise.
+# Price calculation exercise
 
 ## Notes
 - I used static products to mimic a product data source for simplicity
