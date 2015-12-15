@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -34,13 +35,23 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(2.10m));
         }
+
+        [Test]
+        public void BreadOfferDoesNotApplyToExtraBread()
+        {
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Bread);
+            basket.AddProduct(Product.Bread);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(3.10m));
+        }
     }
 
     public class Basket
     {
         private readonly ICollection<Product> products = new List<Product>();
         private static int noOfButterRequiredForOffer = 2;
-        private static int noOfBreadRequiredForOffer = 1;
 
         public void AddProduct(Product product)
         {
@@ -56,15 +67,13 @@ namespace PriceCalculation.Tests
 
         private decimal GetBreadOfferDiscount()
         {
-            var discount = 0m;
+            var noOfButter = products.Count(p => p == Product.Butter);
+            var noOfBread = products.Count(p => p == Product.Bread);
 
-            if (products.Count(p => p == Product.Butter) == noOfButterRequiredForOffer
-                && products.Count(p => p == Product.Bread) == noOfBreadRequiredForOffer)
-            {
-                discount += Product.Bread.Price / 2;
-            }
+            var noOfTimesOfferCanApply = noOfButter / noOfButterRequiredForOffer;
+            var noOfTimesToApplyOffer = Math.Min(noOfBread, noOfTimesOfferCanApply);
 
-            return discount;
+            return noOfTimesToApplyOffer * (Product.Bread.Price / 2);
         }
     }
 
