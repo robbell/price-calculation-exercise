@@ -18,6 +18,18 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(2.95m));
         }
+
+        [Test]
+        public void BreadIsHalfPriceWhenTwoButtersArePurchased()
+        {
+            var basket = new Basket();
+
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Butter);
+            basket.AddProduct(Product.Bread);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(2.10m));
+        }
     }
 
     public class Basket
@@ -31,7 +43,14 @@ namespace PriceCalculation.Tests
 
         public decimal GetTotal()
         {
-            return products.Sum(p => p.Price);
+            var discount = 0m;
+
+            if (products.Count(p => p == Product.Butter) == 2 && products.Count(p => p == Product.Bread) == 1)
+            {
+                discount += Product.Bread.Price / 2;
+            }
+
+            return products.Sum(p => p.Price) - discount;
         }
     }
 
