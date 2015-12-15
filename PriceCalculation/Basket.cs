@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using PriceCalculation.Offers;
 
-namespace PriceCalculation.Tests
+namespace PriceCalculation
 {
     public class Basket
     {

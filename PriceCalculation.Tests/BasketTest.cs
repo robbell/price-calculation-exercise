@@ -2,6 +2,7 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using PriceCalculation.Offers;
 
 namespace PriceCalculation.Tests
 {
@@ -38,10 +39,5 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(0.75m));
         }
-    }
-
-    public interface IOffer
-    {
-        decimal GetDiscount(IEnumerable<Product> products);
     }
 }

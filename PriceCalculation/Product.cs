@@ -1,4 +1,4 @@
-﻿namespace PriceCalculation.Tests
+﻿namespace PriceCalculation
 {
     public class Product
     {
