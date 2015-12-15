@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 
 namespace PriceCalculation.Tests
 {
@@ -20,20 +22,25 @@ namespace PriceCalculation.Tests
 
     public class Basket
     {
-        public decimal GetTotal()
-        {
-            return 0;
-        }
+        private readonly ICollection<Product> products = new List<Product>();
 
         public void AddProduct(Product product)
         {
+            products.Add(product);
+        }
+
+        public decimal GetTotal()
+        {
+            return products.Sum(p => p.Price);
         }
     }
 
     public class Product
     {
-        public static Product Butter = new Product();
-        public static Product Milk = new Product();
-        public static Product Bread = new Product();
+        public static Product Butter = new Product { Price = 0.80m };
+        public static Product Milk = new Product { Price = 1.15m };
+        public static Product Bread = new Product { Price = 1.00m };
+
+        public decimal Price { get; set; }
     }
 }
