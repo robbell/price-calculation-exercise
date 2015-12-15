@@ -60,6 +60,17 @@ namespace PriceCalculation.Tests
 
             Assert.That(basket.GetTotal(), Is.EqualTo(4.20m));
         }
+
+        [Test]
+        public void FourthMilkIsFreeWhenThreeMilksArePurchased()
+        {
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+            basket.AddProduct(Product.Milk);
+
+            Assert.That(basket.GetTotal(), Is.EqualTo(3.45m));
+        }
     }
 
     public class Basket
