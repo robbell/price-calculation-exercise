@@ -7,11 +7,17 @@ namespace PriceCalculation.Tests
     [TestFixture]
     public class BasketTest
     {
+        private Basket basket;
+
+        [SetUp]
+        public void SetUp()
+        {
+            basket = new Basket();
+        }
+
         [Test]
         public void ProvidesTotalCostForAddedProducts()
         {
-            var basket = new Basket();
-
             basket.AddProduct(Product.Butter);
             basket.AddProduct(Product.Milk);
             basket.AddProduct(Product.Bread);
@@ -22,8 +28,6 @@ namespace PriceCalculation.Tests
         [Test]
         public void BreadIsHalfPriceWhenTwoButtersArePurchased()
         {
-            var basket = new Basket();
-
             basket.AddProduct(Product.Butter);
             basket.AddProduct(Product.Butter);
             basket.AddProduct(Product.Bread);
@@ -35,6 +39,8 @@ namespace PriceCalculation.Tests
     public class Basket
     {
         private readonly ICollection<Product> products = new List<Product>();
+        private static int noOfButterRequiredForOffer = 2;
+        private static int noOfBreadRequiredForOffer = 1;
 
         public void AddProduct(Product product)
         {
@@ -43,14 +49,22 @@ namespace PriceCalculation.Tests
 
         public decimal GetTotal()
         {
+            var discount = GetBreadOfferDiscount();
+
+            return products.Sum(p => p.Price) - discount;
+        }
+
+        private decimal GetBreadOfferDiscount()
+        {
             var discount = 0m;
 
-            if (products.Count(p => p == Product.Butter) == 2 && products.Count(p => p == Product.Bread) == 1)
+            if (products.Count(p => p == Product.Butter) == noOfButterRequiredForOffer
+                && products.Count(p => p == Product.Bread) == noOfBreadRequiredForOffer)
             {
                 discount += Product.Bread.Price / 2;
             }
 
-            return products.Sum(p => p.Price) - discount;
+            return discount;
         }
     }
 
